@@ -1,6 +1,13 @@
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_timer.h>
 #include <cstdlib>
 #include <iostream>
+#include "Pet/pet.h"
+
+float prevTime = 0;
+float currentTime = 0;
+float deltaTime = 0;
+Pet pet;
 
 int main() {
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
@@ -30,6 +37,10 @@ int main() {
     std::cout << "Window Created!\n";
     bool running = true;
     while(running) {
+        prevTime = currentTime;
+        currentTime = SDL_GetTicks();
+        deltaTime = (currentTime - prevTime) / 1000.0f;
+        //Code for moveTo will go here
         SDL_Event event;
         while(SDL_PollEvent(&event)) {
             if(event.type == SDL_EVENT_QUIT) {
