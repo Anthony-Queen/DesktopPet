@@ -1,12 +1,19 @@
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_timer.h>
 #include <cstdlib>
 #include <iostream>
 #include "Pet/pet.h"
 
+//Variables to calculate FPS
 float prevTime = 0;
 float currentTime = 0;
 float deltaTime = 0;
+
+//Get Cursor's position
+float cursorX;
+float cursorY;
+//The Pet object, duh!
 Pet pet;
 
 int main() {
@@ -37,10 +44,15 @@ int main() {
     std::cout << "Window Created!\n";
     bool running = true;
     while(running) {
+        //Calculate FPS
         prevTime = currentTime;
         currentTime = SDL_GetTicks();
         deltaTime = (currentTime - prevTime) / 1000.0f;
-        //Code for moveTo will go here
+        //Make pet follow Cursor
+        SDL_GetGlobalMouseState(&cursorX, &cursorY);
+        pet.moveTo(cursorX, cursorY, deltaTime);
+        SDL_SetWindowPosition(window, pet.getPosX(), pet.getPosY());
+
         SDL_Event event;
         while(SDL_PollEvent(&event)) {
             if(event.type == SDL_EVENT_QUIT) {
