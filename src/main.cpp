@@ -7,15 +7,20 @@
 #include "Pet/pet.h"
 
 //Variables to calculate FPS
-float prevTime = 0;
-float currentTime = 0;
-float deltaTime = 0;
+float prevTime;
+float currentTime;
+float deltaTime;
+float frameTime;
+const int Fps = 60;
+const float frameDuration = 1000.0f / Fps;
+
 
 //Get Cursor's position
 float cursorX;
 float cursorY;
 //The Pet object, duh!
 Pet pet;
+
 
 int main() {
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
@@ -49,12 +54,18 @@ int main() {
         prevTime = currentTime;
         currentTime = SDL_GetTicks();
         deltaTime = (currentTime - prevTime) / 1000.0f;
+        std::cout << "FPS: " << 1.0f / deltaTime << "\n";
         //Make pet follow Cursor
         SDL_GetGlobalMouseState(&cursorX, &cursorY);
-        std::cout << "Cursor: " << cursorX << "and " << cursorY;
         pet.moveTo(cursorX, cursorY, deltaTime);
         SDL_SetWindowPosition(window, static_cast<int>(pet.getPosX()), static_cast<int>(pet.getPosY()));
         SDL_GetError();
+
+        frameTime = deltaTime - frameDuration;
+        if(frameTime > 0){
+            SDL_Delay(frameTime);
+        }
+
 
         SDL_Event event;
         while(SDL_PollEvent(&event)) {
