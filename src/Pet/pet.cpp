@@ -5,16 +5,15 @@
 void Pet::moveTo(float cursorX, float cursorY, float deltaTime) {
     float deltaX = cursorX - posX;
     float deltaY = cursorY - posY;
+    float petPath = sqrt(deltaX * deltaX + deltaY * deltaY);
     //If pet is near cursor then stop moving, otherwise keep on going
-    if(deltaY < 0.2 and deltaX < 0.2){
+    if(petPath < 0.2f){
         currentState = IDLE;
         return;
     }
     else {
         currentState = FOLLOWING;
     }
-
-    float petPath = sqrt(deltaX * deltaX + deltaY * deltaY);
     float directionX = deltaX / petPath;
     float directionY = deltaY / petPath;
     float movementX = directionX * speed;

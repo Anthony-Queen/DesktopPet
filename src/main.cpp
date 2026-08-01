@@ -1,5 +1,6 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_mouse.h>
+#include <SDL3/SDL_platform.h>
 #include <SDL3/SDL_timer.h>
 #include <cstdlib>
 #include <iostream>
@@ -50,8 +51,10 @@ int main() {
         deltaTime = (currentTime - prevTime) / 1000.0f;
         //Make pet follow Cursor
         SDL_GetGlobalMouseState(&cursorX, &cursorY);
+        std::cout << "Cursor: " << cursorX << "and " << cursorY;
         pet.moveTo(cursorX, cursorY, deltaTime);
-        SDL_SetWindowPosition(window, pet.getPosX(), pet.getPosY());
+        SDL_SetWindowPosition(window, static_cast<int>(pet.getPosX()), static_cast<int>(pet.getPosY()));
+        SDL_GetError();
 
         SDL_Event event;
         while(SDL_PollEvent(&event)) {
