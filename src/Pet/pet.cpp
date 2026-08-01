@@ -2,6 +2,7 @@
 #include <SDL3/SDL_video.h>
 #include <cmath>
 
+
 void Pet::moveTo(float cursorX, float cursorY, float deltaTime) {
     float deltaX = cursorX - posX;
     float deltaY = cursorY - posY;

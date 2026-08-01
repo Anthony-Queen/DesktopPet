@@ -1,0 +1,14 @@
+// Project-local debug tasks
+//
+// For more documentation on how to configure debug tasks,
+// see: https://zed.dev/docs/debugger
+[
+  {
+    "label": "Debug C++ App",
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "program": "build/Pet",
+    "cwd": ".",
+    "sourceLanguages": ["cpp"]
+  }
+]

@@ -1,32 +1,32 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_platform.h>
+#include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_timer.h>
-#include <cstdlib>
 #include <iostream>
 #include "Pet/pet.h"
 
-//Variables to calculate FPS
-float prevTime;
-float currentTime;
-float deltaTime;
-float frameTime;
-const int Fps = 60;
-const float frameDuration = 1000.0f / Fps;
+//Cap Framerate to 60
+const float targetFrameTime = 1000.0f / 60.0f;
+Uint64 start;
+Uint64 end;
+Uint32 frameTime;
 
 
 //Get Cursor's position
-float cursorX;
-float cursorY;
+float cursorX = 0;
+float cursorY = 0;
+
 //The Pet object, duh!
 Pet pet;
 
 
 int main() {
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
-        std::cout << "Inititialization Failed: " << SDL_GetError();
-        exit(1);
+    std::string platform = SDL_GetPlatform();
+    if(platform == "Linux"){
+        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "x11");
     }
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
     SDL_Window* window = SDL_CreateWindow("Pet", 150, 200, SDL_WINDOW_ALWAYS_ON_TOP);
     if(!window) {
@@ -50,19 +50,17 @@ int main() {
     std::cout << "Window Created!\n";
     bool running = true;
     while(running) {
-        //Calculate FPS
-        prevTime = currentTime;
-        currentTime = SDL_GetTicks();
-        deltaTime = (currentTime - prevTime) / 1000.0f;
-        std::cout << "FPS: " << 1.0f / deltaTime << "\n";
+        start = SDL_GetTicks();
         //Make pet follow Cursor
         SDL_GetGlobalMouseState(&cursorX, &cursorY);
-        pet.moveTo(cursorX, cursorY, deltaTime);
-        SDL_SetWindowPosition(window, static_cast<int>(pet.getPosX()), static_cast<int>(pet.getPosY()));
+        pet.moveTo(cursorX, cursorY, frameTime);
+        SDL_SetWindowPosition(window, pet.getPosX(), pet.getPosY());
         SDL_GetError();
 
-        frameTime = deltaTime - frameDuration;
-        if(frameTime > 0){
+        end = SDL_GetTicks();
+        frameTime = end - start;
+
+        if(frameTime < targetFrameTime){
             SDL_Delay(frameTime);
         }
 
