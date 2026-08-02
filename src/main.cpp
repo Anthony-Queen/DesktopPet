@@ -22,10 +22,6 @@ Pet pet;
 
 
 int main() {
-    std::string platform = SDL_GetPlatform();
-    if(platform == "Linux"){
-        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "x11");
-    }
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
     SDL_Window* window = SDL_CreateWindow("Pet", 150, 200, SDL_WINDOW_ALWAYS_ON_TOP);
@@ -52,16 +48,15 @@ int main() {
     while(running) {
         start = SDL_GetTicks();
         //Make pet follow Cursor
-        SDL_GetGlobalMouseState(&cursorX, &cursorY);
-        pet.moveTo(cursorX, cursorY, frameTime);
+        float deltaTime = 1.0f / 60.0f;
+        pet.moveTo(cursorX, cursorY, deltaTime);
         SDL_SetWindowPosition(window, pet.getPosX(), pet.getPosY());
         SDL_GetError();
-
         end = SDL_GetTicks();
         frameTime = end - start;
 
         if(frameTime < targetFrameTime){
-            SDL_Delay(frameTime);
+            SDL_Delay(targetFrameTime - frameTime);
         }
 
 

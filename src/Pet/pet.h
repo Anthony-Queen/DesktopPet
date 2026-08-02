@@ -9,8 +9,8 @@ class Pet {
         float getPosX();
         float getPosY();
     private:
-        float speed = 5;
-        float posX;
-        float posY;
+        float speed = 300.0f;
+        float posX = 0;
+        float posY = 0;
         std::string name;
 };
