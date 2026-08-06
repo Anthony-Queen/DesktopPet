@@ -4,8 +4,9 @@
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_timer.h>
 #include <iostream>
+#include <string>
 #include "Pet/pet.h"
-
+#include "GetCursor/getCursor.h"
 //Cap Framerate to 60
 const float targetFrameTime = 1000.0f / 60.0f;
 Uint64 start;
@@ -20,9 +21,17 @@ float cursorY = 0;
 //The Pet object, duh!
 Pet pet;
 
+//Get Backend
+std::string Backend; //X11, Wayland etc...
+
+//Get the Cursor Pos
+void(*getCursorPos)(float&, float&);
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+    Backend = SDL_GetCurrentVideoDriver();
+
+    setBackend(Backend, getCursorPos);
 
     SDL_Window* window = SDL_CreateWindow("Pet", 150, 200, SDL_WINDOW_ALWAYS_ON_TOP);
     if(!window) {
@@ -44,10 +53,12 @@ int main() {
 
 
     std::cout << "Window Created!\n";
+
     bool running = true;
     while(running) {
         start = SDL_GetTicks();
         //Make pet follow Cursor
+        getCursorPos(cursorX, cursorY);
         float deltaTime = 1.0f / 60.0f;
         pet.moveTo(cursorX, cursorY, deltaTime);
         SDL_SetWindowPosition(window, pet.getPosX(), pet.getPosY());
