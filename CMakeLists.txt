@@ -12,6 +12,7 @@ find_package(SDL3 REQUIRED)
 add_executable(Pet
     src/main.cpp
     src/Pet/pet.cpp
+    src/GetCursor/getCursor.cpp
 )
 
 
